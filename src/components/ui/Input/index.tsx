@@ -27,7 +27,6 @@ export default function Input({
     endContext?: React.ReactNode;
     errorMessage?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-
 }) {
 
     return (

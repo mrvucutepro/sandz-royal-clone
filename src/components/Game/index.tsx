@@ -5,6 +5,7 @@ import { CardGame } from './components/CardGame';
 import SelectGame from './components/SelectGame';
 import { useScreen } from '@/lib/hooks/useScreen';
 import GamezoneBorder from './components/GamezoneBorder';
+import { useAuth } from '@/lib/context/AuthContext';
 
 interface ICard {
     cardTitle: string;
@@ -49,7 +50,7 @@ export default function Game() {
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 md:px-8 xl:px-40 ">
                         {cardGameList.map((card, index) => (
                             <div key={index} className='w-full h-auto max-w-xs md:max-w-sm xl:max-w-none'>
-                                <CardGame  cardTitle={card.cardTitle} cardImage={card.cardImage} gameLogo={card.gameLogo} />
+                                <CardGame cardTitle={card.cardTitle} cardImage={card.cardImage} gameLogo={card.gameLogo} />
                             </div>
                         ))}
                     </div>
