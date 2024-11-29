@@ -1,0 +1,190 @@
+/* ---------Card Game------------------------- */
+.card {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    background-color: #777777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card:hover {
+    background-color: white;
+  }
+  
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card-image-container {
+    background-color: #f1f5f9;
+    height: 90%;
+    width: 90%;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card-image {
+    height: 90%;
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  .image-glass{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    text-align: center;
+    font-size: 100%; /* text-3xl */
+    font-weight: 600; /* font-semibold */
+    color: white;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card:hover .card-title {
+    opacity: 0;
+  }
+  
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: #bc4747;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card:hover .card-overlay {
+    opacity: 0.8;
+  }
+  
+  .overlay-text {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: bold;
+    color: white;
+  }
+  
+  .button-right {
+    right: 0;
+    transform: translateX(-100%);
+  }
+  .button-right{
+    position: absolute;
+    bottom: 5%;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-out;
+  }
+  
+  .button-left {
+    position: absolute;
+    bottom: 5%;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-out;
+  }
+  
+  .button-left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  
+  .card:hover .button-right {
+    transform: translateX(0);
+  }
+  
+  .card:hover .button-left {
+    transform: translateX(0);
+  }
+  
+  .action-button {
+    background-color: #bc4747;
+    border: 3px solid #fff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px; /* rounded-full */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .action-button:hover {
+    background-color: white;
+    color: #bc4747;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 0.5rem;
+    gap: 0.5rem; /* Thêm khoảng cách giữa các phần tử */
+  }
+  
+  .card-footer-text {
+    font-size: 100%; /* text-2xl */
+    padding-top: 6px;
+    font-weight: bold;
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .card-footer-subtext {
+    font-size: 100%;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .card:hover .card-footer-text {
+    color: black;
+  }
+  
+  .card:hover .card-footer-subtext {
+    color: #bc4747;
+  }
+/* ---------------------------------------- */
+
+/* --------------------text gradient-------------- */
+
+  .gradient-text {
+    background-image: linear-gradient(to bottom, #fff, #b7b7b7); 
+    -webkit-background-clip: text; 
+    color: transparent; 
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.733);
+  }
+
+  h2.gradient-text-image {
+    position: relative; 
+    display: inline-block;
+  }
+  
+  h2.gradient-text-image img {
+    display: block;
+    width: 100%; 
+    height: auto;
+    position: relative;
+    z-index: 2;
+  }
+  
+  h2.gradient-text-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, #fff, #b7b7b7);
+    z-index: 1; 
+  }
