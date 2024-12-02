@@ -3,9 +3,28 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { useScreen } from '@/lib/hooks/useScreen';
+import { useAuth } from '@/lib/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { ProfileUser } from '@/components/Home/components/ProfileUser';
+
+
+export const LogoutComponent = () => {
+  const { logout } = useAuth();
+  return (
+    <button type='button'  onClick={logout} className="text-[#c79f5f] hover:text-[#f5d39d] hover:border-[#f5d39d] text-lg font-extrabold rounded-full border-4 px-6 py-1 border-[#c79f5f]">
+      Log Out
+    </button>
+  )
+}
+
+
 
 export default function NavBar() {
   const isXl = useScreen('xl'); 
+  const { user, onOpenLogin } = useAuth();
+  const router = useRouter();
+  const { logout } = useAuth();
+
   const [typeScreen, setTypeScreen] = useState('desktop');
   const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
@@ -31,9 +50,12 @@ export default function NavBar() {
               GAMEZONE
             </Link>
             <Image src="/assets/image/logo_sandz.png" width={300} height={60} alt="Picture of main" />
-            <Link href="/login" className="text-[#c79f5f] hover:text-[#f5d39d] hover:border-[#f5d39d] text-lg font-extrabold rounded-full border-4 px-6 py-1 border-[#c79f5f]">
-              Log In
-            </Link>
+            {user ? <LogoutComponent/> : 
+              <Link href="/login" className="text-[#c79f5f] hover:text-[#f5d39d] hover:border-[#f5d39d] text-lg font-extrabold rounded-full border-4 px-6 py-1 border-[#c79f5f]">
+                Log In
+              </Link>
+            }
+            
           </>
         )}
         {typeScreen === 'mobile' && (
@@ -48,6 +70,7 @@ export default function NavBar() {
           </>
         )}
       </div>
+      
 
       {typeScreen === 'mobile' && isMenuOpen && (
         <div className="absolute top-20 left-0 w-full bg-[#111316] shadow-md">

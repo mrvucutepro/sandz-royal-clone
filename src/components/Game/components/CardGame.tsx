@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 import { Button } from '@nextui-org/react';
-import { useSession } from 'next-auth/react';
 import { useAuth } from '@/lib/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { handleGameRun } from '@/app/api/game';
+import { BRAND_ID } from '@/lib/constants';
 
-export function CardGame({ cardTitle, cardImage, gameLogo }) {
-  const { user, onOpenLogin } = useAuth();
+export function CardGame({ cardTitle, cardImage, gameLogo, handlePlayGame, gameID }) {
+  const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
   const router = useRouter();
 
   const events = [
@@ -31,7 +32,8 @@ export function CardGame({ cardTitle, cardImage, gameLogo }) {
       }
     }
   };
-  
+    
+  console.log(user);
 
   return (
     <div className="card">
@@ -41,7 +43,7 @@ export function CardGame({ cardTitle, cardImage, gameLogo }) {
           <img src={cardImage} className="card-image" alt="Game" />
           <img className="card-title" src={gameLogo} />
           <div className="card-overlay">
-            <p className="overlay-text">Game Start</p>
+            <button type='button' onClick={() => handlePlayGame(gameID)} className="overlay-text">Game Start</button>
           </div>
           {events.map((event, index) => (
             <div key={index} className={`button-${event.title === '출금신청' ? 'right' : 'left'}`}>

@@ -8,7 +8,6 @@ export default function ObjectGame({ isActive, imageSet, onSetActive, gameId }) 
         }
     };
 
-
     return (
       <div
         className="relative inline-block group cursor-pointer"

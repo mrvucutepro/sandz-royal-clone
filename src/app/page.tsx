@@ -1,8 +1,7 @@
 'use client';
 import ContentPage from '@/components/Home/components/ContentPage';
-import { LoginFormDialog } from '@/components/Home/components/LoginFormDialog';
+import LoginForm from '@/components/Home/components/LoginForm';
 import MobileScreen from '@/components/MobileComponent';
-import { useAuth } from '@/lib/context/AuthContext';
 import { useScreen } from '@/lib/hooks/useScreen';
 export default function Home({}) {
   const isMd = useScreen('md');

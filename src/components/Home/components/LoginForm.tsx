@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
-import logo from '@/app/assets/logo.png'
+import { Modal, ModalContent, ModalHeader, ModalBody, Button } from "@nextui-org/react";
 import Image from 'next/image';
+// import logo from "/assets/image/logo2.png"
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -48,17 +48,17 @@ export default function LoginForm() {
             console.log("error", error);
             setIsLoading(false);
         });
-
     };
+
     return (
-        <>
-            <Modal isOpen={isOpenLogin} onOpenChange={onOpenChangeLogin}>
-                <ModalContent className='rounded bg-black max-w-xs'>
+        <div>
+            <Modal  isOpen={isOpenLogin} onOpenChange={onOpenChangeLogin} placement='center'>
+                <ModalContent className='rounded bg-[#eee] max-w-md'>
                     {() => (
                         <>
                             <ModalHeader className="flex justify-center mt-[30px]">
-                                <div className='relative w-[140px] h-[42px]'>
-                                    <Image src={logo} alt='logo' fill />
+                                <div className='relative'>
+                                    <img src="/assets/image/logo2.png" alt='logo' className='h-24 w-24' />
                                 </div>
                             </ModalHeader>
                             <ModalBody>
@@ -109,9 +109,7 @@ export default function LoginForm() {
                                             />
                                         )}
                                     />
-                                    <Button isLoading={isLoading} style={{
-                                        background: "linear-gradient(180deg, #0565A0 0%, #0074BD 18%, #0074BD 81%, #0565A0 100%)"
-                                    }} type="submit" className='w-full h-[50px] text-white rounded'>
+                                    <Button isLoading={isLoading} className='text-white rounded w-full h-[50px] bg-red-800' type='submit'>
                                         로그인
                                     </Button>
                                 </form>
@@ -120,6 +118,6 @@ export default function LoginForm() {
                     )}
                 </ModalContent>
             </Modal>
-        </>
+        </div>
     )
 }

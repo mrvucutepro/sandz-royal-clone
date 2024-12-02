@@ -32,7 +32,7 @@ export default function Input({
     return (
         <div className={`flex flex-col space-y-1 w-full ${className}`}>
             {title && (
-                <label htmlFor="input" className="text-sm text-white mb-[10px]">
+                <label htmlFor="input" className="text-sm text-black mb-[10px]">
                     {title}
                 </label>
             )}
@@ -50,7 +50,7 @@ export default function Input({
                     id="input"
                     type={type}
                     placeholder={placeholder}
-                    className={`${!underline ? 'border border-solid border-[#64DAFE]' : 'border-b border-gray-500  transition duration-200 focus:border-gray-300'} rounded px-3 py-2 text-base w-full bg-transparent  focus:transparent focus:outline-none  ${classNameInput} ${startContext ? "pl-10" : ""}`}
+                    className={`${underline ? 'border border-solid border-[#000] ' : 'border-b border-gray-500  transition duration-200 focus:border-gray-300'} rounded px-3 py-2 text-base w-full bg-transparent  focus:transparent focus:outline-none  ${classNameInput} ${startContext ? "pl-10" : ""}`}
                 />
                 {endContext && (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">

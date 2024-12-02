@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -13,19 +12,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { useLogin } from "@/lib/context/AuthContext"
+import { useAuth } from "@/lib/context/AuthContext"
+import { useDisclosure} from "@nextui-org/react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -33,8 +23,7 @@ const formSchema = z.object({
   }),
 })
 
-export function LoginFormDialog() {
-  const { showLoginModal, setShowLoginModal } = useLogin();
+export function LoginForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,27 +35,29 @@ export function LoginFormDialog() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
   }
-  const handleLogin = (e : React.FormEvent<HTMLFormElement>) => {
-    const form = e.target as HTMLFormElement;
-    const username = form.username.value;
-    const password = form.password.value;
-  }
 
   return (
-    <Dialog open={showLoginModal} onOpenChange={(isOpen) => !isOpen && setShowLoginModal(false)}>
-      <DialogContent>
-        <DialogHeader>
-          <img className="h-10 w-10" src="/assets/image/logo2.png"></img>
-          <DialogTitle>Login Form</DialogTitle>
-        </DialogHeader>
-          <form onSubmit={handleLogin} className="space-y-4">
-              <Input name="username" placeholder="Enter your username" required />
-              <Input name="password" type="password" placeholder="Enter your password" required />
-              <Button type="submit" className="submit-button">
-                Submit
-              </Button>
-          </form>
-      </DialogContent>
-    </Dialog>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="shadcn" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
   )
+
 }

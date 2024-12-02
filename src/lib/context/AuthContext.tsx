@@ -19,15 +19,12 @@ interface AuthContextType {
 
 }
 
-// Create AuthContext
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Define type for AuthProvider props
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Create provider component
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IProfile | null>(null);
   const { isOpen: isOpenLogin, onOpen: onOpenLogin, onOpenChange: onOpenChangeLogin } = useDisclosure();
@@ -35,7 +32,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [selectGameRun, setSelectGameRun] = useState(1)
   useEffect(() => {
     const auth = localStorage.getItem("authToken");
-    if (auth) {
+    if (auth ) {
       try {
         const parseAuth = JSON.parse(auth);
         setUser(parseAuth);
@@ -56,13 +53,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const value = React.useMemo(
+    () => ({
+      user,
+      setUser,
+      onOpenLogin,
+    }),
+    [user]
+  );
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("authToken");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isOpenLogin, onOpenChangeLogin, onOpenLogin, isOpenBank, onOpenBank, onOpenChangeBank, selectGameRun, setSelectGameRun }}>
+    <AuthContext.Provider value={{user, login, logout, isOpenLogin, onOpenChangeLogin, onOpenLogin, isOpenBank, onOpenBank, onOpenChangeBank, selectGameRun, setSelectGameRun }}>
       {children}
     </AuthContext.Provider>
   );

@@ -2,8 +2,12 @@
 
 import Link from 'next/link';
 import React from 'react';
-import LoginForm from '../../Home/components/LoginFormDialog';
 import { useScreen } from '@/lib/hooks/useScreen';
+import { useAuth } from '@/lib/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useDisclosure } from '@nextui-org/modal';
+import { Button } from '@nextui-org/react';
+import WalletComponent from '@/components/Wallet';
 
 interface ITitleItem {
   title: string;
@@ -13,6 +17,9 @@ interface ITitleItem {
 export default function HeroBar() {
   const isMd = useScreen('md');
   const isXl = useScreen('xl');
+  const { user, onOpenLogin, isOpenLogin } = useAuth();
+  const router = useRouter();
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   const titles: ITitleItem[] = [
     {
@@ -102,9 +109,9 @@ export default function HeroBar() {
       <div className="sticky top-0 w-full">
         <div className=" h-24 w-full flex items-center justify-around bg-[#111316]/50 px-40 relative z-10">
           {titles.map((value, index) => (
-            <a
+            <Button
               key={index}
-              href="/gamezone"
+              onPress={onOpen}
               className="text-[#fff] text-2xl font-bold flex-1 text-center transition-all duration-300 ease-in-out"
             >
               <div className="flex items-center gap-2">
@@ -117,7 +124,7 @@ export default function HeroBar() {
                     0 0 30px rgba(255, 255, 255, 1);
                 }
               `}</style>
-            </a>
+            </Button>
           ))}
           <div className="flex items-center absolute top-0 right-40">
             <Link href="/">
@@ -130,6 +137,7 @@ export default function HeroBar() {
           </div>
         </div>
       </div>
+      <WalletComponent isOpen={isOpen} onOpenChange={onOpenChange}/>
     </div>
   );
 }

@@ -14,6 +14,7 @@ export interface IProfile {
   
   export interface GameRunProps {
     username: string;
+    brand_id: number;
     game_id: string;
     mobile: string;
   }
