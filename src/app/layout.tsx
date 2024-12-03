@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import '../styles/card.css';
+import '../styles/style.css';
 import SessionProviderWrapper from '@/lib/provider/session-provider';
 import NextUiProvider from './NextUiProvider';
 import { AuthProvider } from '@/lib/context/AuthContext';
@@ -34,6 +34,7 @@ export default function RootLayout({
       >
         <NextUiProvider>
           <AuthProvider>{children}</AuthProvider>
+          {/* <ToastContainer /> */}
         </NextUiProvider>
       </body>
     </html>

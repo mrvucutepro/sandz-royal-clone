@@ -13,27 +13,18 @@ export default function WalletComponent({ isOpen, onOpenChange }: WalletProps) {
 
   return (
     <div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent className="bg-[#eee] max-w-6xl">
           {(onClose) => (
             <>
-              <ModalHeader className="flex gap-2 justify-evenly items-center">
-                <div className="">
+              <ModalHeader className="flex gap-2 justify-evenly">
+                <div className="flex justify-start">
                     My wallet
                 </div>
                 <div className="flex justify-between gap-2">
                     <TabWallet/>
                 </div>
-
               </ModalHeader>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>

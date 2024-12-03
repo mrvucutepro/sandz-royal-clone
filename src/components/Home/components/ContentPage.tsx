@@ -12,7 +12,6 @@ export default function ContentPage() {
     <div>
       <Header />
       <Game />
-      <LoginForm />
       <AnotherCaseComponent />
       <MenuComponent />
       <CustomerCenter />

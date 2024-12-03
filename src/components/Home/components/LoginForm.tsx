@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, Button } from "@nextui-org/react";
-import Image from 'next/image';
-// import logo from "/assets/image/logo2.png"
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -11,6 +11,8 @@ import { handleLogin } from '@/app/api/login';
 import { useAuth } from '@/lib/context/AuthContext';
 import { EyeSlashFilledIcon } from '@/components/EyeSlashFilledIcon';
 import { EyeFilledIcon } from '@/components/EyeFIlledIcon';
+import { useScreen } from '@/lib/hooks/useScreen';
+import LoginFormMobile from '@/components/MobileComponent/components/LoginFormMobile';
 
 const schema = yup.object().shape({
     username: yup.string().required("Username is required"),
@@ -22,7 +24,9 @@ export default function LoginForm() {
     const [isVisible, setIsVisible] = React.useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const toggleVisibility = () => setIsVisible(!isVisible);
-
+    const isLg = useScreen('lg');
+  
+    
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
     });
@@ -51,73 +55,84 @@ export default function LoginForm() {
     };
 
     return (
+    
         <div>
-            <Modal  isOpen={isOpenLogin} onOpenChange={onOpenChangeLogin} placement='center'>
-                <ModalContent className='rounded bg-[#eee] max-w-md'>
-                    {() => (
-                        <>
-                            <ModalHeader className="flex justify-center mt-[30px]">
-                                <div className='relative'>
-                                    <img src="/assets/image/logo2.png" alt='logo' className='h-24 w-24' />
-                                </div>
-                            </ModalHeader>
-                            <ModalBody>
-                                <form className='mb-6' onSubmit={handleSubmit(onSubmit)}>
-                                    <Controller
-                                        name="username"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <>
+            {isLg ? (
+                <Modal  isOpen={isOpenLogin} onOpenChange={onOpenChangeLogin} placement='center'>
+                    <ModalContent className='rounded bg-[#eee] max-w-md'>
+                        {() => (
+                            <>
+                                <ModalHeader className="flex justify-center mt-[30px]">
+                                    <div className='relative'>
+                                        <img src="/assets/image/logo2.png" alt='logo' className='h-24 w-24' />
+                                    </div>
+                                </ModalHeader>
+                                <ModalBody>
+                                    <form className='mb-6' onSubmit={handleSubmit(onSubmit)}>
+                                        <Controller
+                                            name="username"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <>
+                                                    <Input
+                                                        underline
+                                                        className='mb-6'
+                                                        classNameInput='bg-transparent focus:bg-transparent'
+                                                        {...field}
+                                                        placeholder="아이디"
+                                                        title='아이디'
+                                                        errorMessage={errors.username?.message}
+                                                    />
+                                                </>
+                                            )}
+                                        />
+                                        <Controller
+                                            name="password"
+                                            control={control}
+                                            render={({ field }) => (
                                                 <Input
                                                     underline
-                                                    className='mb-6'
+                                                    className='mb-12'
                                                     classNameInput='bg-transparent focus:bg-transparent'
                                                     {...field}
-                                                    placeholder="아이디"
-                                                    title='아이디'
-                                                    errorMessage={errors.username?.message}
+                                                    placeholder="비밀번호"
+                                                    title='비밀번호'
+                                                    errorMessage={errors.password?.message}
+                                                    type={isVisible ? "text" : "password"}
+                                                    endContext={
+                                                        <>
+                                                            {!!field.value && (
+                                                                <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
+                                                                    {isVisible ? (
+                                                                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                                                    ) : (
+                                                                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                                                    )}
+                                                                </button>
+                                                            )}
+                                                        </>
+                                                    }
                                                 />
-                                            </>
-                                        )}
-                                    />
-                                    <Controller
-                                        name="password"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Input
-                                                underline
-                                                className='mb-12'
-                                                classNameInput='bg-transparent focus:bg-transparent'
-                                                {...field}
-                                                placeholder="비밀번호"
-                                                title='비밀번호'
-                                                errorMessage={errors.password?.message}
-                                                type={isVisible ? "text" : "password"}
-                                                endContext={
-                                                    <>
-                                                        {!!field.value && (
-                                                            <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
-                                                                {isVisible ? (
-                                                                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                                                ) : (
-                                                                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                                                                )}
-                                                            </button>
-                                                        )}
-                                                    </>
-                                                }
-                                            />
-                                        )}
-                                    />
-                                    <Button isLoading={isLoading} className='text-white rounded w-full h-[50px] bg-red-800' type='submit'>
-                                        로그인
-                                    </Button>
-                                </form>
-                            </ModalBody>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
+                                            )}
+                                        />
+                                        <Button isLoading={isLoading} className='text-white rounded w-full h-[50px] bg-red-800' type='submit'>
+                                            로그인
+                                        </Button>
+                                    </form>
+                                </ModalBody>
+                            </>
+                        )}
+                    </ModalContent>
+                </Modal>
+            ):(
+                <Modal isOpen={isOpenLogin} placement='top-center' className='bg-slate-500 mt-20 max-w-full'>
+                    <ModalContent>
+                        <ModalBody>
+                            <LoginFormMobile/>
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
+            )}
         </div>
-    )
+    );
 }

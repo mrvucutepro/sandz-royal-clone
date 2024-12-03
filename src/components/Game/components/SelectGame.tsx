@@ -21,9 +21,6 @@ const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
     onSetActive(gameId);
   };
 
-  const handleSelectGame=()=>{
-    
-  }
 
   return (
     <div className="flex w-[50%] h-[70%] justify-evenly">

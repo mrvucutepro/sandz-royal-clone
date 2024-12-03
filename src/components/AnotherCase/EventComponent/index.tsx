@@ -9,11 +9,5 @@ export default function EventComponent() {
             <CustomAccordion />
             <ButtonMore />
         </div>
-
-        // <div className="flex justify-center items-center flex-col ">
-        //     <h2 className="text-4xl font-bold p-2 gradient-text">Event</h2>
-        //     <CustomAccordion />
-        //     <ButtonMore />
-        // </div>
     );
 }

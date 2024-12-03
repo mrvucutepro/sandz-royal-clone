@@ -8,9 +8,9 @@ import GamezoneBorder from './components/GamezoneBorder';
 import { useAuth } from '@/lib/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { handleGameRun } from '@/app/api/game';
-import { BRAND_ID } from '@/lib/constants';
+import { BRAND_ID, listGames, listGameSlot } from '@/lib/constants';
 import { toast } from "react-toastify";
-import { Dialog, DialogContent, DialogHeader } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 
 interface ICard {
     cardTitle: string;
@@ -24,28 +24,9 @@ export default function Game() {
     const isXl = useScreen('xl'); 
     const [activeGame, setActiveGame] = useState('casino');
     const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    
-    const cardGameCasino : ICard[]=[
-      {cardTitle: 'DB CASINO',cardImage: '/assets/image/play-game-1.jpg', gameLogo: '/assets/image/game-logo/logo-game-ho.png', gameID:'evolution'},
-      {cardTitle: 'EVOLUTION CASINO',cardImage: '/assets/image/play-game-2.jpg',gameLogo: '/assets/image/game-logo/logo-game-tiger.png',gameID:'pragmatic'},
-      {cardTitle: 'PRAGMATIC CASINO',cardImage: '/assets/image/play-game-1.jpg',gameLogo: '/assets/image/game-logo/logo-game-vl.png', gameID:'pragmatic_slot'},
-      {cardTitle: 'SEXY CASINO',cardImage: '/assets/image/play-game-2.jpg', gameLogo: '/assets/image/game-logo/logo-game-ebet.png', gameID:'bota'},
-      {cardTitle: 'HO CASINO',cardImage: '/assets/image/play-game-2.jpg', gameLogo: '/assets/image/game-logo/logo-game-microgaming.png', gameID:'microgaming'},
-      {cardTitle: 'SALON CASINO',cardImage: '/assets/image/play-game-1.jpg', gameLogo: '/assets/image/game-logo/logo-game-ho.png', gameID:'sexygaming'},
-      {cardTitle: 'MICRO CASINO',cardImage: '/assets/image/play-game-2.jpg', gameLogo: '/assets/image/game-logo/logo-game-ebet.png', gameID:'evolution'},
-      {cardTitle: 'UNION CASINO',cardImage: '/assets/image/play-game-1.jpg', gameLogo: '/assets/image/game-logo/logo-game-vl.png',gameID:'pragmatic'},
-    ]
-    const cardGameSlot : ICard[]=[
-        {cardTitle: 'DB CASINO',cardImage: '/assets/image/play-game-2.jpg', gameLogo: '/assets/image/game-logo/logo-game-ho.png',  gameID:'evolution'},
-        {cardTitle: 'EVOLUTION CASINO',cardImage: '/assets/image/play-game-2.jpg',gameLogo: '/assets/image/game-logo/logo-game-tiger.png',  gameID:'pragmatic'},
-        {cardTitle: 'PRAGMATIC CASINO',cardImage: '/assets/image/play-game-1.jpg',gameLogo: '/assets/image/game-logo/logo-game-vl.png',  gameID:'pragmatic_slot'},
-        {cardTitle: 'SEXY CASINO',cardImage: '/assets/image/play-game-1.jpg', gameLogo: '/assets/image/game-logo/logo-game-ebet.png',  gameID:'bota'},
-    ]
-
-    const cardGameList = activeGame === 'casino' ? cardGameCasino : cardGameSlot;
-
+  
+    const cardGameList = activeGame === 'casino' ? listGames : listGameSlot;
     const openPopup = (popupUrl: string) => {
         const width = 1440;
         const height = 810;
@@ -85,7 +66,7 @@ export default function Game() {
             console.error('Error starting game:', error);
         }
     }
-    
+
     return (
         <>  
             <div
@@ -96,6 +77,7 @@ export default function Game() {
                 {isLoading && (
                     <Dialog open={isLoading}>
                         <DialogContent>
+                            {/* <DialogTitle>abc</DialogTitle> */}
                             <DialogHeader>
                                 <div className="loading-overlay">
                                     <img src="/assets/image/loading.png" />
@@ -105,12 +87,12 @@ export default function Game() {
                     </Dialog>
                 )}    
                 <GamezoneBorder/>
-                <div className="bg-black/0 h-full grid grid-rows-[auto_1fr] justify-center place-items-center py-10 ">
+                <div className="bg-black/0 h-full grid grid-rows-[auto_1fr] justify-center place-items-center py-10 px-24 ">
                     <SelectGame active={activeGame} onSetActive={setActiveGame}/>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 md:px-8 xl:px-40 ">
                     {cardGameList.map((card, index) => (
                         <div key={index} className='w-full h-auto max-w-xs md:max-w-sm xl:max-w-none'>
-                            <CardGame handlePlayGame={() => handlePlayGame(card.gameID)} cardTitle={card.cardTitle} cardImage={card.cardImage} gameLogo={card.gameLogo} gameID={card.gameID}/>
+                            <CardGame handlePlayGame={() => handlePlayGame(card.key)} cardTitle={card.label} cardImage={card.image} gameLogo={card.logo} gameID={card.key}/>
                         </div>
                     ))}
                     </div>

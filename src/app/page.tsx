@@ -9,6 +9,7 @@ export default function Home({}) {
 
   return (
     <>
+        <LoginForm />
         {isLg && <ContentPage />}
         {!isLg && <MobileScreen />}
     </>
