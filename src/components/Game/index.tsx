@@ -12,18 +12,12 @@ import { BRAND_ID, listGames, listGameSlot } from '@/lib/constants';
 import { toast } from "react-toastify";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 
-interface ICard {
-    cardTitle: string;
-    cardImage: string;
-    gameLogo:string;
-    gameID: string;
-}
 
 export default function Game() {
     const isMd = useScreen('md');
     const isXl = useScreen('xl'); 
     const [activeGame, setActiveGame] = useState('casino');
-    const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
+    const { user, onOpenLogin} = useAuth();
     const [isLoading, setIsLoading] = useState(false);
   
     const cardGameList = activeGame === 'casino' ? listGames : listGameSlot;
@@ -57,7 +51,7 @@ export default function Game() {
               if (res.status === "0") {
                 openPopup(res.popupUrl);
               } else {
-                  toast.error(res.message);
+                toast.error(res.message);
               }
             })    
             console.log(gameID);
@@ -66,7 +60,7 @@ export default function Game() {
             console.error('Error starting game:', error);
         }
     }
-
+    
     return (
         <>  
             <div
@@ -77,7 +71,6 @@ export default function Game() {
                 {isLoading && (
                     <Dialog open={isLoading}>
                         <DialogContent>
-                            {/* <DialogTitle>abc</DialogTitle> */}
                             <DialogHeader>
                                 <div className="loading-overlay">
                                     <img src="/assets/image/loading.png" />

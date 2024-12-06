@@ -33,8 +33,6 @@ export function CardGame({ cardTitle, cardImage, gameLogo, handlePlayGame, gameI
     }
   };
     
-  console.log(user);
-
   return (
     <div className="card">
       <div className="card-content">

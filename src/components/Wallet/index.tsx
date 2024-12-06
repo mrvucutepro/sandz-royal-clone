@@ -1,9 +1,13 @@
 "use client";
 
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import { useState } from "react";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { TabWallet } from "./TabWallet";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+} from "@/components/ui/dialog"
+import { VisuallyHidden } from "@nextui-org/react";
 interface WalletProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
@@ -12,23 +16,17 @@ interface WalletProps {
 export default function WalletComponent({ isOpen, onOpenChange }: WalletProps) {
 
   return (
-    <div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
-        <ModalContent className="bg-[#eee] max-w-6xl">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex gap-2 justify-evenly">
-                <div className="flex justify-start">
-                    My wallet
-                </div>
-                <div className="flex justify-between gap-2">
-                    <TabWallet/>
-                </div>
-              </ModalHeader>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </div>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="bg-[#eee] max-w-6xl h-[80%] overflow-y-auto">
+        <DialogHeader>
+          <VisuallyHidden>
+            <DialogTitle>
+            </DialogTitle>
+          </VisuallyHidden>
+          <TabWallet />
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+
   );
 }

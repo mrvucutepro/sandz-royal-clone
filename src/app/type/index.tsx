@@ -18,4 +18,22 @@ export interface IProfile {
     game_id: string;
     mobile: string;
   }
+
+  export interface IChangePhoneProps {
+    current_mobile: string;
+    mobile: string;
+  }
+
+  export interface IChangePasswordProps {
+    brand_id: number,
+    username: string,
+    current_password:string,
+    password: string;
+  }
+
+  export interface IGetInfo {
+    username: string,
+    brand_id: number,
+  }
+
   

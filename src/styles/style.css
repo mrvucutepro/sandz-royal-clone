@@ -233,3 +233,4 @@
   background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1));
   pointer-events: none; /* Để không ảnh hưởng tới việc tương tác với ảnh */
 }
+

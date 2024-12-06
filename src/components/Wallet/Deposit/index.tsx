@@ -1,5 +1,5 @@
-import { Button } from '@nextui-org/react';
-import React from 'react'
+import { Button, Dropdown, Textarea, VisuallyHidden } from '@nextui-org/react';
+import React, { useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import Input  from '../../ui/Input/index';
@@ -9,7 +9,11 @@ import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { listAmount, listGames } from '@/lib/constants';
 import { handleDeposit } from '@/app/api/payment';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger} from '@radix-ui/react-dialog';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { IChangePhoneProps } from '@/app/type';
+import { handleChangePhone } from '@/app/api/user';
+import { ChangePhoneForm } from '../ChangePhoneForm';
  
 
 const list_guides = [
@@ -73,6 +77,8 @@ export type FormDeposit = yup.InferType<typeof schema>;
 export default function DepositComponent() {
   const router = useRouter();
   const { user } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -117,9 +123,7 @@ export default function DepositComponent() {
     };
     try {
       await handleDeposit(customData)
-        .then((res) => {    
-          console.log(res);
-                
+        .then((res) => {                    
           if (res.status === "0") {
             toast.success(res.message);
             handleSetValueInit();
@@ -136,61 +140,21 @@ export default function DepositComponent() {
       console.error('Error Deposit: ', error);    }
   };
 
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
+
   return (
       <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-10">
-            <Controller
-              name="amount"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <div>
-                    <div className="flex gap-3 items-end">
-                      <Input
-                        classNameInput="bg-white focus:bg-white text-black focus:text-black border-none"
-                        {...field}
-                        value={field.value?.toString()}
-                        placeholder="금액을 입력하세요"
-                        title="충전금액"
-                      />
-                      <Button className="px-2 py-1">정정</Button>
-                    </div>
-                    {errors.amount && (
-                      <p className="text-red-500 text-xs mt-2">
-                        {errors.amount?.message}
-                      </p>
-                    )}
-
-                  <select
-                      className="text-black bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        확장게임 선택
-                      </option>
-                      {listAmount.map((amt, inx) => (
-                        <option key={inx} value={amt.value} onClick={() => handleSelectPayment(amt.value)}>
-                          {amt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
-            />
-          </div>
-          <div className="mb-10">
+        <div className="gap-16 flex items-center border border-[#cecece] p-3 rounded-t-lg ">
             <Controller
               name="game"
               control={control}
               render={({ field }) => (
                 <>
-                  <p className="mb-[10px]">신청게임</p>
-                  <div className="flex gap-3 items-end">
+                  <p className="mb-[10px] font-extrabold text-sm flex items-center">신청게임</p>
+                  <div className="flex gap-3">
                     <select
-                      className="text-black bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-black w-[400px] bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       {...field}
                       value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value)}
@@ -214,20 +178,98 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <div className="mb-10">
+          <div className="text-[#00a2ff] border border-[#cecece] p-3 pl-32">
+            게임창에 입장하시면 게임머니 지급이 불가하오니 로비에서 기다려주세요.
+          </div>
+          <div className="gap-12 flex items-center border border-[#cecece] p-3">
+            <p className='mb-[10px] font-extrabold text-sm flex items-center'>핸드폰번호</p>
+            <div className='grid gap-3'>
+              <div className='flex w-[50%] gap-3'>
+                <Input
+                  classNameInput="bg-white focus:bg-white text-black border-none "
+                  placeholder="성명을 입력하세요."
+                  disabled
+                  value={user?.HP_NO.slice(0,3)}
+                />
+                <span className="text-xl text-[#666]">-</span>
+                <Input
+                  classNameInput="bg-white focus:bg-white text-black border-none "
+                  placeholder="성명을 입력하세요."
+                  disabled
+                  value={user?.HP_NO.slice(3,7)}
+                />
+                <span className="text-xl text-[#666]" >-</span>
+                <Input
+                  classNameInput="bg-white focus:bg-white text-black border-none "
+                  placeholder="성명을 입력하세요."
+                  disabled
+                  value={user?.HP_NO.slice(7)}
+                />
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger asChild>
+                    <Button className='bg-red-500'>핸드폰번호 변경</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                      <VisuallyHidden>
+                        <DialogTitle>핸드폰번호 변경</DialogTitle>
+                      </VisuallyHidden>
+                    <ChangePhoneForm onClose={handleClose}/>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <p> * 입력된 핸드폰 번호로 계좌가 전송되오니 정확하게 입력하시기 바랍니다.</p>
+            </div>
+          </div>
+          <div className="gap-10 flex items-center border border-[#cecece] p-3">
+          <Controller
+              name="amount"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <div className='flex '>
+                    <div className="flex gap-16 items-center">
+                      <p className="mb-[10px] font-extrabold text-sm flex items-center">신청게임</p>
+                      <div className='grid gap-2'>
+                        <Input
+                          classNameInput="bg-white focus:bg-white text-black focus:text-black border-none"
+                          {...field}
+                          value={field.value?.toString()}
+                          placeholder="금액을 입력하세요"
+                        />
+                        <div className='flex gap-4'>
+                          {listAmount.map((amt, inx) => (
+                            <div className='bg-[#aaa] flex items-center p-2 rounded-sm text-white cursor-pointer hover:bg-[#949494]' key={inx} value={amt.value} onClick={() => handleSelectPayment(amt.value)}>
+                              {amt.label}
+                            </div>
+                          ))}
+                          <p className='content-center'>* 입금 최소 금액은 3만원입니다.</p>
+                        </div>
+                      </div>
+                    </div>
+                      {errors.amount && (
+                        <p className="text-red-500 text-xs mt-2">
+                          {errors.amount?.message}
+                        </p>
+                      )}
+                  </div>
+                </>
+              )}
+            />
+          </div>
+          <div className="gap-10 flex items-center border border-[#cecece] p-3">
             <Controller
               name="deposit_name"
               control={control}
               render={({ field }) => (
                 <>
-                  <div className="max-w-[300px] flex gap-3 items-end">
+                  <div className="flex gap-24">
+                    <p className='mb-[10px] font-extrabold text-sm flex items-center'>입금자명</p>
                     <Input
                       classNameInput="bg-white focus:bg-white text-black focus:text-black border-none "
                       {...field}
                       placeholder="성명을 입력하세요."
-                      title="입금자명"
                     />
-                    <Button>정정</Button>
+                    <p className='content-center'>* 입금 최소 금액은 3만원입니다.</p>
                   </div>
                   {errors.deposit_name && (
                     <p className="text-red-500 text-xs mt-2">
@@ -238,16 +280,16 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <div className="mb-10">
+          <div className="gap-10 flex items-center border border-[#cecece] p-3">
             <Controller
               name="comment"
               control={control}
               render={({ field }) => (
                 <>
-                  <p className="mb-[10px]">남기고 싶은말</p>
-                  <div className="max-w-[300px]">
-                    <textarea
-                      className="bg-white focus:bg-white text-black focus:text-black border-none w-full p-2 "
+                  <p className="mb-[10px] font-extrabold text-sm flex items-center">남기고 싶은말</p>
+                  <div className="max-w-full">
+                    <Textarea
+                      className="bg-white text-black max-w-full"
                       {...field}
                       placeholder="남기고 싶은말"
                     />
@@ -261,22 +303,7 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <div className="mb-5 w-full">
-            <p className="mb-[10px]">포인트 선택</p>
-            <div className="bg-white py-5 px-1 flex flex-col gap-2">
-              {list_guides.map((guid, inx) => {
-                return (
-                  <GuidDeposit
-                    key={inx}
-                    title={guid.title}
-                    subtitle={guid.subtitle}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          <Button type="submit" className='bg-red-100'>신청하기</Button>
-
+          <Button type="submit" className='bg-red-700 text-white text-2xl rounded-sm flex mt-4 block mx-auto px-10'>신청하기</Button>
     </form>
   )
 }

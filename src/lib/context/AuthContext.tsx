@@ -53,19 +53,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const value = React.useMemo(
-    () => ({
-      user,
-      setUser,
-      onOpenLogin,
-    }),
-    [user]
-  );
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("authToken");
   };
+
 
   return (
     <AuthContext.Provider value={{user, login, logout, isOpenLogin, onOpenChangeLogin, onOpenLogin, isOpenBank, onOpenBank, onOpenChangeBank, selectGameRun, setSelectGameRun }}>

@@ -4,6 +4,7 @@ import NavBar from './components/NavBar';
 import HeroBar from './components/HeroBar';
 import { Slider } from './components/Slider';
 import { useScreen } from '@/lib/hooks/useScreen';
+import PopupContainer from '../Home/components/PopupContainer';
 
 export default function Header() {
  
@@ -11,6 +12,7 @@ export default function Header() {
 
   return (
     <div className="w-full h-full">
+      <PopupContainer/>
       <NavBar />
       <div className="relative z-10 h-full">
         {isXl && (
