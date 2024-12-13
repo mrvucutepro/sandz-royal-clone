@@ -1,27 +1,29 @@
 import { Button } from '@nextui-org/react';
-import React from 'react'
-import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
-import Input  from '../../ui/Input/index';
+import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import Input from '../../ui/Input/index';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/AuthContext';
-import { toast } from "react-toastify";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from 'react-toastify';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { listAmount, listGames } from '@/lib/constants';
-import { handleDeposit, handleWithDraw } from '@/app/api/payment';
-import { ScrollArea } from '@/components/ui/scroll-area';
- 
+import { handleWithDraw } from '@/app/api/payment';
+import PopupWithdraw from './PopupWithdraw';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
+import { Dropdown } from '@/components/ui/Dropdown';
 
 const list_guides = [
   {
-    title: "슬롯 - 롤링200%, 첫충전 10%, 매일충전 5% 자동 지급",
+    title: '슬롯 - 롤링200%, 첫충전 10%, 매일충전 5% 자동 지급',
   },
   {
-    title: "카지노 - 롤링 100%",
-    subtitle: "카지노 이용 시 당일 페이백 이벤트 참여 불가",
+    title: '카지노 - 롤링 100%',
+    subtitle: '카지노 이용 시 당일 페이백 이벤트 참여 불가',
   },
   {
-    title: "받지않음 - 포인트 미지급 롤링 100%",
+    title: '받지않음 - 포인트 미지급 롤링 100%',
   },
 ];
 
@@ -52,28 +54,27 @@ const GuidDeposit = ({
 const schema = yup.object().shape({
   amount: yup
     .number()
-    .required("Amount is required")
-    .min(50000, "Amount must be at least 50,000")
-    .max(10000000, "Amount must be at most 10,000,000")
+    .required('Amount is required')
+    .min(50000, 'Amount must be at least 50,000')
+    .max(10000000, 'Amount must be at most 10,000,000')
     .test(
-      "is-multiple-of-10000",
-      "Amount must be a multiple of 10,000",
+      'is-multiple-of-10000',
+      'Amount must be a multiple of 10,000',
       (value) => {
         return value % 10000 === 0;
-      }
+      },
     ),
-  deposit_name: yup.string().required("Deposit name is required"),
-  game: yup.string().required("Game is required"),
-  comment: yup.string().default(""),
+  deposit_name: yup.string().required('Deposit name is required'),
+  game: yup.string().required('Game is required'),
+  comment: yup.string().default(''),
 });
 
 export type FormDeposit = yup.InferType<typeof schema>;
 
-export default function WithdrawComponent() {
+export default function WithdrawComponent({header} : {header : string}) {
   const router = useRouter();
   const { user } = useAuth();
   const {
-    control,
     handleSubmit,
     setValue,
     reset,
@@ -82,29 +83,29 @@ export default function WithdrawComponent() {
     resolver: yupResolver(schema),
     defaultValues: {
       amount: 50000,
-      deposit_name: "",
+      deposit_name: '',
       game: undefined,
-      comment: "",
+      comment: '',
     },
   });
 
   const handleSelectPayment = (value: number) => {
-    setValue("amount", value);
+    setValue('amount', value);
   };
 
   const handleSetValueInit = () => {
     reset({
       amount: 50000,
-      deposit_name: "",
+      deposit_name: '',
       game: undefined,
-      comment: "",
+      comment: '',
     });
   };
 
   const onSubmit = async (data: FormDeposit) => {
     if (!user) {
-      console.error("User is not authenticated");
-      router.push("/");
+      console.error('User is not authenticated');
+      router.push('/');
       return;
     }
     const customData = {
@@ -118,7 +119,7 @@ export default function WithdrawComponent() {
       await handleWithDraw(customData)
         .then((res) => {
           console.log(res);
-          if (res.status === "0") {
+          if (res.status === '0') {
             toast.success(res.message);
             handleSetValueInit();
           } else {
@@ -128,154 +129,90 @@ export default function WithdrawComponent() {
         })
         .catch((err) => {
           console.log(err);
-          toast.error("Something went wrong");
+          toast.error('Something went wrong');
         });
     } catch (error) {
-      console.error('Error Deposit: ', error);    }
+      console.error('Error Deposit: ', error);
+    }
+  };
+
+  const handleGameSelection = (value: string) => {
+    console.log(value);
   };
 
   return (
+    <>
+      <PopupWithdraw />
+      <p className='text-[#aaa] font-bold text-lg py-4'>{header}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-10">
-            <Controller
-              name="amount"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <div>
-                    <div className="flex gap-3 items-end">
-                      <Input
-                        classNameInput="bg-white focus:bg-white text-black focus:text-black border-none"
-                        {...field}
-                        value={field.value?.toString()}
-                        placeholder="금액을 입력하세요"
-                        title="충전금액"
-                      />
-                      <Button className="px-2 py-1">정정</Button>
-                    </div>
-                    {errors.amount && (
-                      <p className="text-red-500 text-xs mt-2">
-                        {errors.amount?.message}
-                      </p>
-                    )}
-
-                  <select
-                      className="text-black bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        확장게임 선택
-                      </option>
-                      {listAmount.map((amt, inx) => (
-                        <option key={inx} value={amt.value} onClick={() => handleSelectPayment(amt.value)}>
-                          {amt.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
+        <ScrollArea className='!bg-[#ffffff80]'>
+          <div className="flex p-4 justify-start gap-16 border items-center">
+            <h3 className="font-bold">신청게임</h3>
+            <Dropdown
+              label={'--확장게임 선택--'}
+              items={listGames}
+              onValueChange={handleGameSelection}
+            />
+            <p className="text-xs">입금 신청하실 게임을 선택해주세요</p>
+          </div>
+          <div className="flex p-4 justify-start gap-16 border border-t-0 items-center">
+            <h3 className="font-bold">출금가능금액</h3>
+            <p className="text-xs">신청하실 게임을 선택하여주세요.</p>
+          </div>
+          <div className="flex p-4 justify-start gap-7 border border-t-0 items-center">
+            <h3 className="font-bold">출금하실금액 </h3>
+            <input className="h-full p-2 border" placeholder="abc"></input>
+            {listAmount.map((amount, index) => (
+              <div key={index}>
+                <button className="text-white p-2 rounded-sm border text-xs bg-[#aaa]">
+                  {amount.label}
+                </button>
+              </div>
+            ))}
+            <p className="text-xs">* 출금 최소 금액은 5만원입니다</p>
+          </div>
+          <div className="flex p-4 justify-start gap-20 border border-t-0 items-center">
+            <h3 className="font-bold">은행명</h3>
+            <Dropdown
+              label={'--확장게임 선택--'}
+              items={listGames}
+              onValueChange={handleGameSelection}
+              disabled={true}
             />
           </div>
-          <div className="mb-10">
-            <Controller
-              name="game"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <p className="mb-[10px]">신청게임</p>
-                  <div className="flex gap-3 items-end">
-                    <select
-                      className="text-black bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      {...field}
-                      value={field.value || ""}
-                      onChange={(e) => field.onChange(e.target.value)}
-                    >
-                      <option value="" disabled>
-                        확장게임 선택
-                      </option>
-                      {listGames.map((game) => (
-                        <option key={game.key} value={game.key}>
-                          {game.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {errors.game && (
-                    <p className="text-red-500 text-xs mt-2">
-                      {errors.game?.message}
-                    </p>
-                  )}
-                </>
-              )}
-            />
+          <div className="flex p-4 justify-start gap-20 border border-t-0 items-center">
+            <h3 className="font-bold">예금주</h3>
+            <input className="h-full p-2 border" placeholder="김수호"></input>
+            <p className="text-xs">
+              * 입/출금 계좌 다르게 사용시 출금처리 안될 수 있으니 계좌 동일하게
+              사용 부탁드립니다. 참고해주세요.
+            </p>
           </div>
-          <div className="mb-10">
-            <Controller
-              name="deposit_name"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <div className="max-w-[300px] flex gap-3 items-end">
-                    <Input
-                      classNameInput="bg-white focus:bg-white text-black focus:text-black border-none "
-                      {...field}
-                      placeholder="성명을 입력하세요."
-                      title="이름을 철회하다
-"
-                    />
-                    <Button>정정</Button>
-                  </div>
-                  {errors.deposit_name && (
-                    <p className="text-red-500 text-xs mt-2">
-                      {errors.deposit_name?.message}
-                    </p>
-                  )}
-                </>
-              )}
-            />
+          <div className="flex p-4 justify-start gap-16 border border-t-0 items-center">
+            <h3 className="font-bold">계좌번호</h3>
+            <input
+              className="h-full p-2 border"
+              placeholder="1232135****33"
+            ></input>
+            <button className="text-white p-2 rounded-sm border text-xs bg-[#aaa]">
+              계좌정보변경
+            </button>
           </div>
-          <div className="mb-10">
-            <Controller
-              name="comment"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <p className="mb-[10px]">남기고 싶은말</p>
-                  <div className="max-w-[300px]">
-                    <textarea
-                      className="bg-white focus:bg-white text-black focus:text-black border-none w-full p-2 "
-                      {...field}
-                      placeholder="남기고 싶은말"
-                    />
-                  </div>
-                  {errors.comment && (
-                    <p className="text-red-500 text-xs mt-2">
-                      {errors.comment?.message}
-                    </p>
-                  )}
-                </>
-              )}
-            />
+          <div className="flex p-4 justify-start gap-10 border border-y-0 border-t-0 items-center">
+            <h3 className="font-bold">남기고 싶은말</h3>
+            <textarea
+              className="h-full w-full border"
+              placeholder=""
+            ></textarea>
           </div>
-          <div className="mb-5 w-full">
-            <p className="mb-[10px]">포인트 선택</p>
-            <div className="bg-white py-5 px-1 flex flex-col gap-2">
-              {list_guides.map((guid, inx) => {
-                return (
-                  <GuidDeposit
-                    key={inx}
-                    title={guid.title}
-                    subtitle={guid.subtitle}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          <Button type="submit" className='bg-red-100'>신청하기</Button>
-
-    </form>
-  )
+          <Button
+            type="submit"
+            className="bg-red-700 text-white hover:bg-red-600 text-2xl rounded-sm flex mx-auto px-10"
+          >
+            신청하기
+          </Button>
+        </ScrollArea>
+      </form>
+    </>
+  );
 }

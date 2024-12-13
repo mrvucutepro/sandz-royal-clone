@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Input } from "@nextui-org/react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
@@ -50,22 +51,22 @@ export const ChangePhoneForm = ({onClose}) =>{
                 })
                 if (res.status === "0") {
                     console.log(2);
-                    alert("Cập nhật số điện thoại thành công!");
+                    toast.success("전화번호가 업데이트되었습니다.");
                     onClose(); 
                 }
             } catch (error) {
-                console.error("Lỗi cập nhật số điện thoại:", error);
-                alert("Đã xảy ra lỗi khi cập nhật số điện thoại.");
+                console.error(error);
+                toast.error("전화번호를 업데이트하는 중에 오류가 발생했습니다.");
             }
         }
     }
     
     return(
-      <form onSubmit={handleSubmit(onSubmit)}>  
+      <form onSubmit={handleSubmit(onSubmit)} className="">  
         <div className="fixed inset-0 flex items-center justify-center z-20">
           <ScrollArea>
-            <div className="w-[650px] h-[250px] bg-[#ccc] p-3">
-              <div className='text-lg font-semibold flex'>
+            <div className="w-[650px] h-[280px] bg-[#ccc] p-3 border">
+              <div className='text-sm font-bold flex text-[#666] py-1 justify-center'>
                 휴대폰 번호변경
               </div>
               <div>
@@ -73,7 +74,7 @@ export const ChangePhoneForm = ({onClose}) =>{
                   <p className='mb-[10px] font-extrabold text-sm flex items-center'>기존 휴대폰 번호</p>
                   <div className='grid gap-3'>
                     <div className='flex w-[100%] gap-3'>
-                      <div className='text-sm w-[100px] items-center'>{user?.HP_NO.slice(0,3)}-{user?.HP_NO.slice(3,5)}</div>   
+                      <div className='text-sm w-[150px] content-center'>{user?.HP_NO.slice(0,3)} - {user?.HP_NO.slice(3,5)}</div>   
                       <Controller
                         name="firstNumber"
                         control={control}
@@ -101,14 +102,14 @@ export const ChangePhoneForm = ({onClose}) =>{
                           />
                         )}
                       />  
-                      <div className='text-sm w-[100px] items-center'>{user?.HP_NO.slice(9,11)}</div>                    
+                      <div className='text-sm w-[100px] content-center'>{user?.HP_NO.slice(9,11)}</div>                    
                     </div>
                   </div>
                 </div>
               </div>
               <div>
               <div className="gap-12 flex items-center bg-[#e0e0e0] rounded-b-sm p-3 border-t-slate-300 border">
-                <p className='mb-[10px] font-extrabold text-sm flex items-center'>기존 휴대폰 번호</p>
+                <p className='mb-[10px] font-bold text-sm flex items-center'>변경할 휴대폰 번호</p>
                   <div className='grid gap-3'>
                     <div className='flex w-[100%] gap-3'>
                     <Controller
@@ -153,12 +154,15 @@ export const ChangePhoneForm = ({onClose}) =>{
                         )}
                     />                    
                     </div>
-                    <p>* 변경할 휴대폰 번호를 입력하세요..</p>
+                    <p className="text-xs">* 변경할 휴대폰 번호를 입력하세요..</p>
                   </div>
                 </div>
               </div>
-              <Button type='submit' className='hover:bg-slate-500 bg-slate-600'>Accept</Button>
-              <Button onClick={onClose} className='hover:bg-slate-500 bg-slate-600'>Close</Button>
+              <div className="flex justify-center py-4 gap-3">
+                <Button type='submit' className='hover:bg-slate-300 bg-[#aaa] text-white rounded-sm'>수정하기</Button>
+                <Button onClick={onClose} className='hover:bg-slate-300 bg-[#aaa] text-white rounded-sm'>창닫기</Button>
+
+              </div>
             </div>
           </ScrollArea>
         </div>

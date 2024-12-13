@@ -50,8 +50,13 @@ export function SheetMenuGame() {
           )}
         </div>
         <div className='grid gap-2 pt-2 w-full px-4'>
-          {menu.otherMenu.map((value) => 
-            <Button key={value} className='bg-[#fff] text-black border-2 font-extrabold text-lg drop-shadow-sm'>{value}</Button>
+          {menu.otherMenu.map((value, index) =>
+            <div key={index}>
+              <Button className='bg-[#fff] text-black border-2 font-extrabold text-lg drop-shadow-sm'>{value}</Button>
+              {/* {value.includes('1:1원격지원') && (
+
+              )} */}
+            </div> 
           )}
         </div>
       </div>

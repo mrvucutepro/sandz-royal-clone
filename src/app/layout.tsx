@@ -1,11 +1,13 @@
+
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import '../styles/style.css';
-import SessionProviderWrapper from '@/lib/provider/session-provider';
 import NextUiProvider from './NextUiProvider';
 import { AuthProvider } from '@/lib/context/AuthContext';
-import { ToastContainer } from 'react-toastify';
+import { ModalGameProvider } from '@/lib/context/GameRuleContext';
+import { WalletProvider } from '@/lib/context/WalletContext';
+import { Toaster } from 'react-hot-toast';
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
@@ -33,8 +35,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextUiProvider>
-          <AuthProvider>{children}</AuthProvider>
-          {/* <ToastContainer /> */}
+          <AuthProvider>
+            <WalletProvider>
+              <ModalGameProvider>
+                {children}
+                <Toaster />
+              </ModalGameProvider>
+            </WalletProvider>
+          </AuthProvider>
         </NextUiProvider>
       </body>
     </html>

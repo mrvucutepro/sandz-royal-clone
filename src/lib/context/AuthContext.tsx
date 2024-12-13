@@ -1,6 +1,5 @@
 "use client";
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
-
 import { useDisclosure } from "@nextui-org/react";
 import { IProfile } from "../type";
 
@@ -9,6 +8,7 @@ interface AuthContextType {
   login: (token: string) => void;
   logout: () => void;
   isOpenLogin: boolean;
+  isCloseLogin: boolean;
   onOpenLogin: () => void;
   onOpenChangeLogin: () => void;
   isOpenBank: boolean;
@@ -16,7 +16,6 @@ interface AuthContextType {
   onOpenChangeBank: () => void;
   selectGameRun: number;
   setSelectGameRun: (value: number) => void;
-
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,7 +26,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IProfile | null>(null);
-  const { isOpen: isOpenLogin, onOpen: onOpenLogin, onOpenChange: onOpenChangeLogin } = useDisclosure();
+  const { isOpen: isOpenLogin, onOpen: onOpenLogin, onOpenChange: onOpenChangeLogin, onClose: isCloseLogin  } = useDisclosure();
   const { isOpen: isOpenBank, onOpen: onOpenBank, onOpenChange: onOpenChangeBank } = useDisclosure();
   const [selectGameRun, setSelectGameRun] = useState(1)
   useEffect(() => {
@@ -61,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{user, login, logout, isOpenLogin, onOpenChangeLogin, onOpenLogin, isOpenBank, onOpenBank, onOpenChangeBank, selectGameRun, setSelectGameRun }}>
+    <AuthContext.Provider value={{user, login, logout, isOpenLogin, isCloseLogin, onOpenChangeLogin, onOpenLogin, isOpenBank, onOpenBank, onOpenChangeBank, selectGameRun, setSelectGameRun }}>
       {children}
     </AuthContext.Provider>
   );

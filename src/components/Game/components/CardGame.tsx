@@ -3,13 +3,11 @@ import * as React from 'react';
 import { Button } from '@nextui-org/react';
 import { useAuth } from '@/lib/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { handleGameRun } from '@/app/api/game';
-import { BRAND_ID } from '@/lib/constants';
 
-export function CardGame({ cardTitle, cardImage, gameLogo, handlePlayGame, gameID }) {
-  const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
+
+export function CardGame({ cardTitle, cardImage, gameLogo, handlePlayGame, gameID, position }) {
+  const { user, onOpenLogin } = useAuth();
   const router = useRouter();
-
   const events = [
     {
       title: '출금신청',
@@ -32,13 +30,20 @@ export function CardGame({ cardTitle, cardImage, gameLogo, handlePlayGame, gameI
       }
     }
   };
-    
+
   return (
     <div className="card">
       <div className="card-content">
         <div className="card-image-container">
           <img className="image-glass" src="/assets/image/gamezone-glass.png" />
-          <img src={cardImage} className="card-image" alt="Game" />
+          <img
+            className="card-image"
+            style={{
+              backgroundImage: `url(/assets/image/gamezone-bg.png)`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: position
+            }}
+          />
           <img className="card-title" src={gameLogo} />
           <div className="card-overlay">
             <button type='button' onClick={() => handlePlayGame(gameID)} className="overlay-text">Game Start</button>

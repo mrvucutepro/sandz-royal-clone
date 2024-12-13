@@ -1,12 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useScreen } from '@/lib/hooks/useScreen';
 import { FaMoneyCheck } from "react-icons/fa";
 import { useDisclosure } from '@nextui-org/modal';
 import { Button } from '@nextui-org/react';
 import WalletComponent from '@/components/Wallet';
+import { useAuth } from '@/lib/context/AuthContext';
 
 interface ITitleItem {
   title: string;
@@ -14,9 +15,8 @@ interface ITitleItem {
 }
 
 export default function HeroBar() {
-  const isMd = useScreen('md');
-  const isXl = useScreen('xl');
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {user, onOpenLogin} = useAuth();
 
   const titles: ITitleItem[] = [
     {
@@ -43,6 +43,16 @@ export default function HeroBar() {
     },
   ];
 
+  const handleClick = () => {
+    if(!user){
+      onOpenLogin();
+      return;
+    }
+    if (!isOpen) {
+      onOpen();
+    }
+  };
+
   return (
     <div>
       <div className="sticky top-0 w-full">
@@ -50,7 +60,7 @@ export default function HeroBar() {
           {titles.map((value, index) => (
             <Button
               key={index}
-              onPress={onOpen}
+              onPress={handleClick}
               className="text-[#fff] text-2xl font-bold flex-1 text-center transition-all duration-300 ease-in-out"
             >
               <div className="flex items-center gap-2">

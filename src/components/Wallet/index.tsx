@@ -14,10 +14,9 @@ interface WalletProps {
 }
 
 export default function WalletComponent({ isOpen, onOpenChange }: WalletProps) {
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#eee] max-w-6xl h-[80%] overflow-y-auto">
+      <DialogContent className="bg-[#eee] max-w-6xl h-[80%] overflow-y-auto pt-0">
         <DialogHeader>
           <VisuallyHidden>
             <DialogTitle>

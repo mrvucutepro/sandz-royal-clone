@@ -4,9 +4,10 @@ export default function ObjectGame({ isActive, imageSet, onSetActive, gameId }) 
 
     const handleClick = () => {
         if (!isActive) {
-            onSetActive(gameId); 
+            onSetActive(gameId);             
         }
     };
+    
 
     return (
       <div

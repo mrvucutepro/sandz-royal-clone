@@ -17,8 +17,6 @@ export const LogoutComponent = () => {
   )
 }
 
-
-
 export default function NavBar() {
   const isXl = useScreen('xl'); 
   const { user, onOpenLogin } = useAuth();
@@ -40,14 +38,12 @@ export default function NavBar() {
     "체험머니신청",
     "Log In",
   ]
-
   const handleScrollToPosition = () => {
     window.scrollTo({
       top: 550, 
       behavior: "smooth", 
     });
   }
-
 
   return (
     <header className="sticky top-0 w-full z-50">

@@ -8,15 +8,13 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { SheetMenuGame } from './SheetMenuGame';
 import { SheetMenuInfo } from './SheetMenuInfo';
 import { Slider } from '@/components/Header/components/Slider';
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import { DialogTitle  } from '@radix-ui/react-dialog';
+
 
 export default function Header() {
 
-
   return (
     <>
-      <header className="sticky top-0 w-full z-50">
+      <header className="absolute top-0 w-[100%] h-[100%] z-50">
         <div className="h-20 w-full flex items-center justify-between bg-[#111316] px-6">
           <Sheet>
             <SheetTrigger asChild>

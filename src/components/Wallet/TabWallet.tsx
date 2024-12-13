@@ -1,43 +1,20 @@
 'use client';
 
-import { listServices } from '@/lib/constants';
-import { Tabs, Tab, Card, CardBody } from '@nextui-org/react';
-import MoneyMovementComponent from './MoneyMovement';
-import DepositComponent from './Deposit';
-import WithdrawComponent from './Withdraw';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
-import MyPage from './MyPage';
+import HeaderWallet from './HeaderWallet';
+import { useWalletContext } from '@/lib/context/WalletContext';
 
-export function TabWallet() {
-
-  const serviceComponents = {
-    "Deposit": <DepositComponent />,
-    "Withdraw": <WithdrawComponent />,
-    "Money Movement": <MoneyMovementComponent />,
-    "My Page": <MyPage />,
-  }
+export function TabWallet({header} : {header: string}) {
+  const { modal } = useWalletContext();
 
   return (
     <div className="">
-      <div className='text-2xl'>
-        My Wallet
+      <HeaderWallet />
+      <div className='h-[500px] max-w-[1500px]'>
+        <div className=' pb-4'>
+          {modal}
+        </div>
       </div>
-      <Tabs aria-label="Dynamic tabs" >
-        {listServices.map((item) => (
-          <Tab
-            key={item}
-            title={item}
-            className="text-xs break-words whitespace-normal justify-start"
-          >
-            <div className='text-xl'>{item}</div>
-            <Card className='relative'>
-            <CardBody className='w-[100%] fixed max-w-full flex-col'>
-                  {serviceComponents[item]}
-              </CardBody>
-            </Card>
-          </Tab>
-        ))}
-      </Tabs>
     </div>
   );
 }

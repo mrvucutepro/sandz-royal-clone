@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { } from 'react';
 import ObjectGame from './ObjectGame';
-import { useAuth } from '@/lib/context/AuthContext';
+import { useGameRuleContext } from '@/lib/context/GameRuleContext';
+import { useScreen } from '@/lib/hooks/useScreen';
 
 export default function SelectGame({active, onSetActive}) {
-//   const [activeGame, setActiveGame] = useState('casino');
-const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
+  const isMd = useScreen('md');
+  const isXl = useScreen('xl'); 
+  const {activeGame, setActiveGame} = useGameRuleContext();
 
   const imageSetCasino = {
     active: '/assets/image/gamezone-title-1.png',
@@ -17,22 +19,21 @@ const { user, onOpenLogin, setSelectGameRun, selectGameRun } = useAuth();
     unactive: '/assets/image/gamezone-title-4.png',
   };
 
-  const handleSetActive = (gameId) => {
-    onSetActive(gameId);
+  const handleSetActive = (gameId: string) => {
+    setActiveGame(gameId);    
   };
-
-
+  
   return (
-    <div className="flex w-[50%] h-[70%] justify-evenly">
+    <div className="flex w-[50%] h-[60%] justify-evenly">
         <ObjectGame
             gameId="casino"
-            isActive={active === 'casino'}
+            isActive={activeGame === 'casino'}
             imageSet={imageSetCasino}
             onSetActive={handleSetActive}
         />
         <ObjectGame
             gameId="slot"
-            isActive={active === 'slot'}
+            isActive={activeGame === 'slot'}
             imageSet={imageSetSLot}
             onSetActive={handleSetActive}
         />    

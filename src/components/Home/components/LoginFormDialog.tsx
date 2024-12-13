@@ -14,8 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useAuth } from "@/lib/context/AuthContext"
-import { useDisclosure} from "@nextui-org/react";
 
 const formSchema = z.object({
   username: z.string().min(2, {

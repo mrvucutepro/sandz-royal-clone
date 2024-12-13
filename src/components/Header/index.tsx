@@ -12,8 +12,8 @@ export default function Header() {
 
   return (
     <div className="w-full h-full">
-      <PopupContainer/>
       <NavBar />
+      <PopupContainer/>
       <div className="relative z-10 h-full">
         {isXl && (
         <div className="absolute z-30 w-full">

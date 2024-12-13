@@ -1,4 +1,4 @@
-import { Button, Dropdown, Textarea, VisuallyHidden } from '@nextui-org/react';
+import { Button, Textarea, VisuallyHidden } from '@nextui-org/react';
 import React, { useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -10,10 +10,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { listAmount, listGames } from '@/lib/constants';
 import { handleDeposit } from '@/app/api/payment';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger} from '@radix-ui/react-dialog';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { IChangePhoneProps } from '@/app/type';
-import { handleChangePhone } from '@/app/api/user';
 import { ChangePhoneForm } from '../ChangePhoneForm';
+import PopupDeposit from './PopupDeposit';
+import { Dropdown } from '@/components/ui/Dropdown';
  
 
 const list_guides = [
@@ -73,8 +72,7 @@ const schema = yup.object().shape({
 
 export type FormDeposit = yup.InferType<typeof schema>;
 
-
-export default function DepositComponent() {
+export default function DepositComponent({header} : {header : string}) {
   const router = useRouter();
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -139,20 +137,24 @@ export default function DepositComponent() {
     } catch (error) {
       console.error('Error Deposit: ', error);    }
   };
-
+  const handleGameSelection = (value: string) => {
+  };
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
   return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="gap-16 flex items-center border border-[#cecece] p-3 rounded-t-lg ">
+    <>
+      <PopupDeposit/>
+      <p className='text-[#aaa] font-bold text-lg py-4'>{header}</p>
+      <form onSubmit={handleSubmit(onSubmit)} className='!bg-[#ffffff80]'>
+        <div className="gap-16 flex items-center p-3 border">
             <Controller
               name="game"
               control={control}
               render={({ field }) => (
                 <>
                   <p className="mb-[10px] font-extrabold text-sm flex items-center">신청게임</p>
-                  <div className="flex gap-3">
+                  {/* <div className="flex gap-3">
                     <select
                       className="text-black w-[400px] bg-white border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       {...field}
@@ -168,7 +170,12 @@ export default function DepositComponent() {
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
+                  <Dropdown
+                    label={'--확장게임 선택--'}
+                    items={listGames}
+                    onValueChange={handleGameSelection}
+                  />
                   {errors.game && (
                     <p className="text-red-500 text-xs mt-2">
                       {errors.game?.message}
@@ -178,10 +185,10 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <div className="text-[#00a2ff] border border-[#cecece] p-3 pl-32">
+          <div className="text-[#00a2ff] border border-t-0 p-3 pl-32">
             게임창에 입장하시면 게임머니 지급이 불가하오니 로비에서 기다려주세요.
           </div>
-          <div className="gap-12 flex items-center border border-[#cecece] p-3">
+          <div className="gap-12 flex items-center border border-t-0 p-3">
             <p className='mb-[10px] font-extrabold text-sm flex items-center'>핸드폰번호</p>
             <div className='grid gap-3'>
               <div className='flex w-[50%] gap-3'>
@@ -207,20 +214,18 @@ export default function DepositComponent() {
                 />
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <DialogTrigger asChild>
-                    <Button className='bg-red-500'>핸드폰번호 변경</Button>
+                    <Button className='bg-[#aaa] h-10 w-full text-white rounded-sm mx-auto px-10'>핸드폰번호 변경</Button>
                   </DialogTrigger>
                   <DialogContent>
-                      <VisuallyHidden>
-                        <DialogTitle>핸드폰번호 변경</DialogTitle>
-                      </VisuallyHidden>
+                        <DialogTitle></DialogTitle>
                     <ChangePhoneForm onClose={handleClose}/>
                   </DialogContent>
                 </Dialog>
               </div>
-              <p> * 입력된 핸드폰 번호로 계좌가 전송되오니 정확하게 입력하시기 바랍니다.</p>
+              <p className='text-xs'> * 입력된 핸드폰 번호로 계좌가 전송되오니 정확하게 입력하시기 바랍니다.</p>
             </div>
           </div>
-          <div className="gap-10 flex items-center border border-[#cecece] p-3">
+          <div className="gap-10 flex items-center border border-t-0 p-3">
           <Controller
               name="amount"
               control={control}
@@ -242,7 +247,7 @@ export default function DepositComponent() {
                               {amt.label}
                             </div>
                           ))}
-                          <p className='content-center'>* 입금 최소 금액은 3만원입니다.</p>
+                          <p className='content-center text-xs'>* 입금 최소 금액은 3만원입니다.</p>
                         </div>
                       </div>
                     </div>
@@ -256,7 +261,7 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <div className="gap-10 flex items-center border border-[#cecece] p-3">
+          <div className=" flex items-center border border-t-0 p-3">
             <Controller
               name="deposit_name"
               control={control}
@@ -265,11 +270,10 @@ export default function DepositComponent() {
                   <div className="flex gap-24">
                     <p className='mb-[10px] font-extrabold text-sm flex items-center'>입금자명</p>
                     <Input
-                      classNameInput="bg-white focus:bg-white text-black focus:text-black border-none "
+                      classNameInput="bg-white focus:bg-white text-black focus:text-black border-none"
                       {...field}
-                      placeholder="성명을 입력하세요."
                     />
-                    <p className='content-center'>* 입금 최소 금액은 3만원입니다.</p>
+                    <p className='text-xs content-center'>* 입,출금계좌 동일하지 않은 경우에는 출금제한 있을수 있으니 꼭 동일하게 사용해주세요!</p>
                   </div>
                   {errors.deposit_name && (
                     <p className="text-red-500 text-xs mt-2">
@@ -280,7 +284,7 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <div className="gap-10 flex items-center border border-[#cecece] p-3">
+          <div className="gap-10 flex items-center border border-y-0 p-3">
             <Controller
               name="comment"
               control={control}
@@ -289,10 +293,13 @@ export default function DepositComponent() {
                   <p className="mb-[10px] font-extrabold text-sm flex items-center">남기고 싶은말</p>
                   <div className="max-w-full">
                     <Textarea
-                      className="bg-white text-black max-w-full"
+                      className="bg-white pb-3 text-black w-full"
                       {...field}
-                      placeholder="남기고 싶은말"
                     />
+                    <p className='text-xs'>
+                      * 보편적으로 23:50 ~ 00:30, 휴일 다음 첫 영업일 새벽에는 계좌이체가 지원되지 않습니다.<br/>
+                      * 위 시간 이외 씨티은행, 농협, 우체국은 추가적 점검시간이 따로 있으니 유념하시기 바랍니다
+                    </p>
                   </div>
                   {errors.comment && (
                     <p className="text-red-500 text-xs mt-2">
@@ -303,7 +310,8 @@ export default function DepositComponent() {
               )}
             />
           </div>
-          <Button type="submit" className='bg-red-700 text-white text-2xl rounded-sm flex mt-4 block mx-auto px-10'>신청하기</Button>
+          <Button type="submit" className='bg-red-700 text-white hover:bg-red-600 text-2xl rounded-sm flex mx-auto px-10'>신청하기</Button>
     </form>
+    </>
   )
 }
